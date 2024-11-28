@@ -1,21 +1,11 @@
-import gymnasium as gym
-# from environment import Environment
-# from experience_source import ExpirienceSource
 from ptan.experience import ExperienceSourceFirstLast
-from ptan.common.wrappers import ImageToPyTorch
-# from stable_baselines3.common.atari_wrappers import MaxAndSkipEnv,  WarpFrame
-# from stable_baselines3.common.vec_env import VecTransposeImage, VecFrameStack, SubprocVecEnv 
-from gymnasium.wrappers.resize_observation import ResizeObservation
-from gymnasium.wrappers.gray_scale_observation import GrayScaleObservation
-from gymnasium.wrappers.frame_stack import FrameStack
-from stable_baselines3.common.atari_wrappers import MaxAndSkipEnv
 from torch.optim import Adam
 
 from .config.config import read_conf
 from .src.net import A2CNet
 from .src.agent import Agent
-from .src.utils.wrappers import FlattenStackDimension, FloatPixels, SaveObservationImg
 from .src.utils.model_storage import ModelStorage
+from .src.environment import get_env
 
 
 def train():
@@ -26,21 +16,18 @@ def train():
     model_storage_path = config['model_storage_path']
     save_model_every = config['save_model_every']
 
-    env = gym.make("CarRacing-v2")
-    # env = ResizeObservation(env , shape=(84, 84))
-    env = GrayScaleObservation(env, keep_dim=True)
-    env = ImageToPyTorch(env)
-    env = MaxAndSkipEnv(env, skip=4)
-    # env = SaveObservationImg(env, screen_img_output_folder, grayscale=True)
-    env = FloatPixels(env)
-    env = FrameStack(env, num_stack=num_stack)
-    env = FlattenStackDimension(env, num_stack=num_stack)
+    env = get_env(render=False, num_stack=num_stack, resize=False, save_obs=False)
 
     net = A2CNet(env.observation_space.shape, env.action_space.shape[0])
     optimizer = Adam(net.parameters())
     agent = Agent(net, optimizer, config)
 
-    exp_source = ExperienceSourceFirstLast(env, agent, gamma=config['gamma'], steps_count=config['reward_steps'])
+    exp_source = ExperienceSourceFirstLast(
+        env, 
+        agent, 
+        gamma=config['gamma'], 
+        steps_count=config['reward_steps']
+    )
 
     batch = []
     epoch = 0
