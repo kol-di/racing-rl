@@ -12,10 +12,10 @@ from stable_baselines3.common.atari_wrappers import MaxAndSkipEnv
 from torch.optim import Adam
 
 from .config.config import read_conf
-from .net import A2CNet
-from .agent import Agent
-from .utils.wrappers import FlattenStackDimension, FloatPixels, SaveObservationImg
-from .utils.model_storage import ModelStorage
+from .src.net import A2CNet
+from .src.agent import Agent
+from .src.utils.wrappers import FlattenStackDimension, FloatPixels, SaveObservationImg
+from .src.utils.model_storage import ModelStorage
 
 
 def train():

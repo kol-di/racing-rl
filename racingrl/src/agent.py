@@ -6,8 +6,6 @@ import typing as tt
 from ptan.agent import BaseAgent
 from ptan.actions import ActionSelector
 
-from src.utils.log_model import SummaryWriterSingleton
-
 
 States = tt.List[np.ndarray] | np.ndarray
 AgentStates = tt.List[tt.Any]
@@ -39,7 +37,6 @@ class Agent(BaseAgent):
 
         self.net.to(self.device)
         
-        # self.summary_writer = SummaryWriterSingleton()
         self.reward_tracker = dict()
 
     @torch.no_grad

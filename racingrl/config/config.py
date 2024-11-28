@@ -1,6 +1,6 @@
 import ruamel.yaml
 
-def read_conf(config_path='./src/config/config.yaml'):
+def read_conf(config_path='./racingrl/config/config.yaml'):
     yaml = ruamel.yaml.YAML(typ="unsafe", pure=True)
     with open(config_path) as f:
         config = yaml.load(f)

@@ -1,5 +1,5 @@
-from src.train import train
-from src.inference import inference
+from racingrl.train import train
+from racingrl.inference import inference
 import argparse
 
 
