@@ -1,0 +1,12 @@
+device: cuda
+
+batch_size: 128
+entropy_beta: 0.01
+gamma: 0.9
+reward_steps: 10
+num_stack: 4
+
+screen_img_output_folder: /home/koldi/se/RacingRL/artifacts/screen_images
+model_storage_path: /home/koldi/se/RacingRL/artifacts/model_storage
+save_model_every: 100
+tensorboard_log_dir: /home/koldi/se/RacingRL/artifacts/runs
