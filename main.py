@@ -1,7 +1,23 @@
 from src.train import train
+from src.inference import inference
+import argparse
 
-def main():
-    train()
+
+def launch():
+    parser = argparse.ArgumentParser(description="Run the script in train or inference mode.")
+    parser.add_argument(
+        "mode", 
+        choices=["train", "inference"], 
+        help="Specify the mode to run: 'train' or 'inference'."
+    )
+
+    args = parser.parse_args()
+
+    if args.mode == "train":
+        train()
+    elif args.mode == "inference":
+        inference()
+        
 
 if __name__ == '__main__':
-    main()
+    launch()
