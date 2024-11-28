@@ -16,7 +16,6 @@ from .net import A2CNet
 from .agent import Agent
 from .utils.wrappers import FlattenStackDimension, FloatPixels, SaveObservationImg
 from .utils.model_storage import ModelStorage
-from .utils.log_model import SummaryWriterSingleton, write_stats
 
 
 def train():
@@ -26,7 +25,6 @@ def train():
     screen_img_output_folder = config['screen_img_output_folder']
     model_storage_path = config['model_storage_path']
     save_model_every = config['save_model_every']
-    tensorboard_log_dir = config['tensorboard_log_dir']
 
     env = gym.make("CarRacing-v2")
     # env = ResizeObservation(env , shape=(84, 84))
@@ -43,8 +41,6 @@ def train():
     agent = Agent(net, optimizer, config)
 
     exp_source = ExperienceSourceFirstLast(env, agent, gamma=config['gamma'], steps_count=config['reward_steps'])
-    # initialise singleton here to set output directory once and for all
-    writer = SummaryWriterSingleton(tensorboard_log_dir)
 
     batch = []
     epoch = 0
@@ -55,13 +51,12 @@ def train():
                 continue
 
             monitor_stats = agent.update_policy(batch)
-            write_stats(writer, monitor_stats, epoch)
+            model_storage.write_stats(monitor_stats, epoch)
             batch.clear()
 
             print(f'Epoch {epoch}')
             if not epoch % save_model_every:
                 model_storage.save_model()
-                print(f'Saved model backup after epcoh {epoch}')
             epoch += 1
 
 

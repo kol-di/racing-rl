@@ -9,4 +9,3 @@ num_stack: 4
 screen_img_output_folder: /home/koldi/se/RacingRL/artifacts/screen_images
 model_storage_path: /home/koldi/se/RacingRL/artifacts/model_storage
 save_model_every: 100
-tensorboard_log_dir: /home/koldi/se/RacingRL/artifacts/runs
