@@ -101,13 +101,9 @@ class Agent(BaseAgent):
 
         action_loss = -self.policy_loss(pred_actions_mu, pred_actions_var, pred_values[...,0], Qs, actions)
         value_loss = nn.functional.mse_loss(Qs, pred_values[...,0])
-        entropy_bonus = -self.entropy(pred_actions_var)
+        entropy_bonus = self.gaussian_entropy(pred_actions_var)
 
-        loss = action_loss + value_loss + entropy_bonus * self.entropy_beta
-        # print(f'Policy loss: {-action_loss.item()}')
-        # print(f'Value loss: {value_loss.item()}')
-        # print(f'Entropy bonus: {-entropy_bonus.item()}')
-        # print(f'Loss: {loss.item()}')
+        loss = action_loss + value_loss - entropy_bonus * self.entropy_beta
 
         # store logging info
         action_loss.backward(retain_graph=True)
@@ -118,6 +114,7 @@ class Agent(BaseAgent):
         self.reward_tracker['policy_loss'] = action_loss.detach().cpu().numpy()
         self.reward_tracker['value_loss'] = value_loss.detach().cpu().numpy()
         self.reward_tracker['entropy_bonus'] = entropy_bonus.detach().cpu().numpy()
+        self.reward_tracker['loss'] = loss.detach().cpu().numpy()
 
         return loss
 
@@ -153,7 +150,7 @@ class Agent(BaseAgent):
         return loss
     
     @staticmethod
-    def entropy(pred_actions_var: torch.Tensor) -> torch.Tensor:
+    def gaussian_entropy(pred_actions_var: torch.Tensor) -> torch.Tensor:
         """Entropy of observed normally distributed predictions"""
         ent = (torch.log(2*torch.pi*pred_actions_var) + 1) / 2
 

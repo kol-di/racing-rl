@@ -72,13 +72,17 @@ class ModelStorage:
             self.summary_writer.add_scalar('grad_l2', np.sqrt(np.mean(np.square(grads))), step_idx)
             self.summary_writer.add_scalar('grad_max', np.max(np.abs(grads)), step_idx)
             self.summary_writer.add_scalar('grad_var', np.var(grads), step_idx)
+            
         if ((As := stats.get('As')) is not None):
             self.summary_writer.add_scalar('As', As, step_idx)
         if ((Qs := stats.get('Qs')) is not None):
             self.summary_writer.add_scalar('Qs', Qs, step_idx)
         if ((Vs := stats.get('Vs')) is not None):
             self.summary_writer.add_scalar('Vs', Vs, step_idx)
-        if ((policy_loss := stats.get('policy_losss')) is not None):
+
+        if ((loss := stats.get('loss')) is not None):
+            self.summary_writer.add_scalar('loss', loss, step_idx)
+        if ((policy_loss := stats.get('policy_loss')) is not None):
             self.summary_writer.add_scalar('policy_loss', policy_loss, step_idx)
         if ((value_loss := stats.get('value_loss')) is not None):
             self.summary_writer.add_scalar('value_loss', value_loss, step_idx)
