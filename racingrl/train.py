@@ -19,7 +19,7 @@ def train():
     env = get_env(render=False, num_stack=num_stack, resize=False, save_obs=False)
 
     net = A2CNet(env.observation_space.shape, env.action_space.shape[0])
-    optimizer = Adam(net.parameters())
+    optimizer = Adam(net.parameters(), eps=1e-3)
     agent = Agent(net, optimizer, config)
 
     exp_source = ExperienceSourceFirstLast(
